@@ -68,6 +68,7 @@ playwright install chromium
 ---
 
 ### 📂 프로젝트 구조
+```bash
 .
 ├── src/                # 소스 코드 폴더
 │   ├── main.py         # 메인 실행 파일
@@ -82,7 +83,7 @@ playwright install chromium
 ├── videos/             # 다운로드 완료된 영상 저장 폴더
 ├── .gitignore          # Git 추적 제외 설정 파일
 └── requirements.txt    # 파이썬 의존성 패키지 목록
-
+```
 ---
 
 ### ⚙️ 주요 설정 (src/config.py)
