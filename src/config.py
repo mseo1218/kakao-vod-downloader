@@ -10,7 +10,7 @@ DONE_FILE = os.path.join(DATA_DIR, "done.txt")
 FAILED_FILE = os.path.join(DATA_DIR, "failed.txt")
 
 # 다운로드 저장 경로
-DOWNLOAD_DIR = os.path.join(BASE_DIR, "videos")
+DOWNLOAD_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "videos"))
 
 # --- 성능 및 작업 설정 ---
 EXTRACTOR_WORKER_COUNT = 1 
