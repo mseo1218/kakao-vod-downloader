@@ -13,23 +13,61 @@
   1080p, 720p 등 사용 가능한 최고 화질을 자동으로 선택합니다.
 
 - **멀티 워커 시스템**
-  - **Title Worker**: 링크를 감시하고 제목을 정제합니다  
-  - **Extractor Worker**: Playwright 기반으로 스트리밍 주소를 추출합니다  
-  - **Downloader Worker**: FFmpeg 기반으로 안정적인 다운로드를 수행합니다  
+  - **Title Worker**: 추가한 링크를 실시간으로 확인하고 제목과 날짜등을 파싱합니다. 
+  - **Extractor Worker**: Playwright 기반으로 스트리밍 주소를 추출합니다.
+  - **Downloader Worker**: FFmpeg 기반으로 다운로드를 수행합니다. (기본값: 동시에 16개)
 
 - **중복 방지**  
   `done.txt`를 통해 이미 완료된 작업은 자동으로 건너뜁니다.
 
 ---
 
-## 🚀 시작하기
+## 🚀 설치 및 실행 방법 (Installation & Usage)
+
+이 프로그램은 두 가지 방식으로 실행할 수 있습니다.
+
+### 1. 일반 사용자
+파이썬 설치 없이 바로 사용하려는 분들을 위한 방법입니다.
+
+1.  [Releases](https://github.com/mseo1218/kakao-vod-downloader/releases) 페이지에서 최신 버전의 `KakaoDownloader.zip`을 다운로드합니다.
+2. `KakaoDownloader.exe`를 실행합니다.
+3. 처음 실행하면 폴더에 **`settings.json`** 파일이 자동 생성됩니다.
+4. **설정 변경**: PC환경에 따라 동시 다운로드 개수를 변경하고 싶으면 `settings.json`을 메모장으로 수정 후 프로그램을 재시작하세요.
+   - `extractor_workers`: 주소 추출기 개수 (기본 1, 변경비추)
+   - `download_workers`: 동시 다운로드 개수 (기본 16)
+   - `headless`: 브라우저 창 숨김 여부 (true/false)
+
+🛑 성인인증 필요시
+  - 프로그램 종료 후 headless 모드를 False로 변경
+  - 프로그램 실행 후 필요한 영상 다운로드 진행시 브라우저 창이 열리면 로그인 완료
+  - 이후 프로그램 종료후 다시 headless 모드를 True로 변경하면, 로그인 세션 저장되어 headless 모드로 성인인증필요한 영상 다운로드 진행가능
+
+---
+
+### 📂 배포판 구조 (dist)
+사용자에게 공유할 때는 아래 파일들이 포함되어 있어야 합니다.
+
+```bash
+.
+├── KakaoDownloader.exe    # 메인 실행 파일
+├── settings.json          # 사용자 설정 파일 (실행 시 자동 생성)
+├── bin/                   # 필수 바이너리 (Chromium, FFmpeg)
+│   ├── playwright/        # 브라우저 엔진
+│   └── ffmpeg.exe         # 영상 합성 엔진
+├── data/                  # 작업 기록 (links.txt 등)
+└── videos/                # 영상 저장 폴더
+└── src/                   # 로그인 세션 찌꺼기
+
+```
+
+### 2. 개발자 및 스크립트 사용자
 
 ### 1. 필수 준비물
 
 이 프로그램은 영상 합성을 위해 FFmpeg가 필요합니다.
 
 - FFmpeg: 공식 사이트에서 설치 후 환경 변수(Path)에 등록합니다  
-- 참고: https://wikidocs.net/305234
+- 참고: https://zerobit.tistory.com/42
 
 ---
 

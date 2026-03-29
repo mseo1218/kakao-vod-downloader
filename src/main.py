@@ -2,12 +2,22 @@ import threading
 import queue
 import time
 import os
+import sys
 import re
 
-from . import config
-from .parser import extract_video_title
-from .extractor import VideoExtractor
-from .downloader import download_video
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC_DIR = os.path.join(BASE_DIR, "src")
+
+if SRC_DIR not in sys.path:
+    sys.path.append(SRC_DIR)
+if BASE_DIR not in sys.path:
+    sys.path.append(BASE_DIR)
+    
+import config
+import parser
+from parser import extract_video_title
+from extractor import VideoExtractor
+from downloader import download_video
 
 # --- 큐 설정 ---
 extract_queue = queue.Queue()  # 타이틀 -> 영상링크용
@@ -116,7 +126,9 @@ def main():
     print("="*50)
     print(f"🚀 링크 추출 워커 & 다운로드 워커 시작(추출:1 / 다운로드:{config.DOWNLOAD_WORKER_COUNT})")
     print("="*50)
-
+    print("/data/links.txt에 다운받고 싶은 영상 링크를 한줄씩 추가하세요")
+    print("종료: Ctrl + C")
+    
     threading.Thread(target=title_worker, daemon=True).start()
     threading.Thread(target=extractor_worker, daemon=True).start()
     
@@ -146,4 +158,5 @@ def main():
         print("\n종료합니다.")
 
 if __name__ == "__main__":
+    config.init_directories()
     main()

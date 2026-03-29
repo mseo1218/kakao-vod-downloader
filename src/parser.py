@@ -1,7 +1,7 @@
 import re
 import requests
 from datetime import datetime
-from . import config
+import config
 
 def extract_video_title(url):
     headers = {"User-Agent": config.USER_AGENT}
