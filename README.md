@@ -84,10 +84,10 @@ playwright install chromium
 ```
 ---
 
-### ⚙️ 주요 설정 (src/config.py)
-```bash
-설정 항목	설명	기본값
-DOWNLOAD_DIR	영상이 저장될 경로를 지정합니다	./videos/
-DOWNLOAD_WORKER_COUNT	동시에 다운로드할 파일 개수를 설정합니다	8
-HEADLESS_MODE	브라우저 창 표시 여부를 설정합니다 (True: 숨김 / False: 표시)	True
-```
+### ⚙️ 주요 설정 (`src/config.py`)
+
+| 설정 항목 | 설명 | 기본값 |
+| :--- | :--- | :--- |
+| `DOWNLOAD_DIR` | 영상이 저장될 경로를 지정합니다. | `./videos/` |
+| `DOWNLOAD_WORKER_COUNT` | 동시에 다운로드할 파일 개수를 설정합니다. | `8` |
+| `HEADLESS_MODE` | 브라우저 창 표시 여부 (True: 숨김 / False: 표시) | `True` |
