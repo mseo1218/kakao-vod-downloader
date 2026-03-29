@@ -30,7 +30,7 @@
 1.  [Releases](https://github.com/mseo1218/kakao-vod-downloader/releases) 페이지에서 최신 버전의 `KakaoDownloader.zip`을 다운로드합니다.
 2. `KakaoDownloader.exe`를 실행합니다.
 3. 처음 실행하면 폴더에 **`settings.json`** 파일이 자동 생성됩니다.
-4. data/links.txt 메모장을 열고 다운받기를 원하는 링크를 한줄씩 붙여넣고 저장하세요.
+4. **`data/links.txt`** 메모장을 열고 다운받기를 원하는 링크를 한줄씩 붙여넣고 저장하세요.
 5. 실시간으로 메모장에 추가되는 링크의 영상 다운로드가 진행됩니다.
 6. 프로그램 종료는 Control + C 를 눌러주세요.
 
@@ -126,7 +126,7 @@ playwright install chromium
 ```
 ---
 
-#### ⚙️ 주요 설정 ('settings.json' or 'src/config.py')
+#### ⚙️ 주요 설정 (`settings.json` or `src/config.py`)
 
 | 설정 항목 | 설명 | 기본값 |
 | :--- | :--- | :--- |
