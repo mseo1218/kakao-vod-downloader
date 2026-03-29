@@ -134,3 +134,12 @@ playwright install chromium
 | `HEADLESS_MODE` | 브라우저 창 표시 여부 (True: 숨김 / False: 표시) | `True` |
 
 🛑 성인인증 필요시 잠깐 HEADLESS모드 꺼서 로그인만 했다가 스크립트 재실행하면 가능
+
+[Third-Party Software Notices]
+
+1. FFmpeg (https://ffmpeg.org)
+   - Licensed under LGPLv2.1 or later.
+   - This software uses libraries from the FFmpeg project.
+
+2. Playwright/Chromium (https://playwright.dev)
+   - Licensed under Apache License 2.0.
