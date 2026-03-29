@@ -13,9 +13,7 @@
   1080p, 720p 등 사용 가능한 최고 화질을 자동으로 선택합니다.
 
 - **멀티 워커 시스템**
-  - **Title Worker**: 추가한 링크를 실시간으로 확인하고 제목과 날짜등을 파싱합니다. 
-  - **Extractor Worker**: Playwright 기반으로 스트리밍 주소를 추출합니다.
-  - **Downloader Worker**: FFmpeg 기반으로 다운로드를 수행합니다. (기본값: 동시에 16개)
+  - **Downloader Worker**: FFmpeg 기반으로 다운로드를 수행합니다. (기본값: 동시 16개)
 
 - **중복 방지**  
   `done.txt`를 통해 이미 완료된 작업은 자동으로 건너뜁니다.
@@ -29,13 +27,19 @@
 ### 1. 일반 사용자
 파이썬 설치 없이 바로 사용하려는 분들을 위한 방법입니다.
 
+```bash
 1.  [Releases](https://github.com/mseo1218/kakao-vod-downloader/releases) 페이지에서 최신 버전의 `KakaoDownloader.zip`을 다운로드합니다.
 2. `KakaoDownloader.exe`를 실행합니다.
 3. 처음 실행하면 폴더에 **`settings.json`** 파일이 자동 생성됩니다.
-4. **설정 변경**: PC환경에 따라 동시 다운로드 개수를 변경하고 싶으면 `settings.json`을 메모장으로 수정 후 프로그램을 재시작하세요.
-   - `extractor_workers`: 주소 추출기 개수 (기본 1, 변경비추)
-   - `download_workers`: 동시 다운로드 개수 (기본 16)
-   - `headless`: 브라우저 창 숨김 여부 (true/false)
+4. data/links.txt 메모장을 열고 다운받기를 원하는 링크를 한줄씩 붙여넣고 저장하세요.
+5. 실시간으로 메모장에 추가되는 링크의 영상 다운로드가 진행됩니다.
+6. 프로그램 종료는 Control + C 를 눌러주세요.
+```
+
+🛑 **설정 변경**: PC환경에 따라 동시 다운로드 개수를 변경하고 싶으면 `settings.json`을 메모장으로 수정 후 프로그램을 재시작하세요.
+   - `extractor_workers`: 주소 추출기 개수 (기본 1, 변경 비추천)
+   - `download_workers`: 동시 다운로드 개수 (기본 16, 문제발생시 줄이기)
+   - `headless`: 브라우저 창 숨김 여부 (기본 True)
 
 🛑 성인인증 필요시
   - 프로그램 종료 후 headless 모드를 False로 변경
