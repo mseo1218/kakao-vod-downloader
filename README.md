@@ -47,7 +47,12 @@ pip install -r requirements.txt
 
 # Playwright 브라우저 설치
 playwright install chromium
-🚀 3. 실행 방법
+
+```
+
+---
+
+### 3. 실행 방법
 
 터미널에서 아래 명령어를 실행하세요.
 
@@ -60,7 +65,9 @@ playwright install chromium
 
 키보드 인터럽트(Ctrl + C)를 사용하여 종료합니다.
 
-📂 프로젝트 구조
+---
+
+### 📂 프로젝트 구조
 .
 ├── src/                # 소스 코드 폴더
 │   ├── main.py         # 메인 실행 파일
@@ -75,7 +82,10 @@ playwright install chromium
 ├── videos/             # 다운로드 완료된 영상 저장 폴더
 ├── .gitignore          # Git 추적 제외 설정 파일
 └── requirements.txt    # 파이썬 의존성 패키지 목록
-⚙️ 주요 설정 (src/config.py)
+
+---
+
+### ⚙️ 주요 설정 (src/config.py)
 설정 항목	설명	기본값
 DOWNLOAD_DIR	영상이 저장될 경로를 지정합니다	./videos/
 DOWNLOAD_WORKER_COUNT	동시에 다운로드할 파일 개수를 설정합니다	8
