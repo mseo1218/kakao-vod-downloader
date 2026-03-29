@@ -1,0 +1,9 @@
+__pycache__/
+.venv/
+venv/
+src/user_data/
+data/*.txt
+*.mp4
+*.part
+.DS_Store
+Thumbs.db
