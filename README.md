@@ -127,6 +127,8 @@ playwright install chromium
 
 🛑 성인인증 필요시 잠깐 HEADLESS모드 꺼서 로그인만 했다가 스크립트 재실행하면 가능
 
+---
+
 [Third-Party Software Notices]
 
 1. FFmpeg (https://ffmpeg.org)
