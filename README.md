@@ -91,3 +91,5 @@ playwright install chromium
 | `DOWNLOAD_DIR` | 영상이 저장될 경로를 지정합니다. | `./videos/` |
 | `DOWNLOAD_WORKER_COUNT` | 동시에 다운로드할 파일 개수를 설정합니다. | `8` |
 | `HEADLESS_MODE` | 브라우저 창 표시 여부 (True: 숨김 / False: 표시) | `True` |
+
+🛑 성인인증 필요시 잠깐 HEADLESS모드 꺼서 로그인만 했다가 스크립트 재실행하면 가능
