@@ -90,17 +90,19 @@ class VideoExtractor:
 
             best_url = None
             if detected_urls:
-                for q in ["1080P", "720P", "HIGH"]:
-                    matches = [u for u in detected_urls if q in u]
+                priority_keywords = ["1080", "720P"]
+                
+                for q in priority_keywords:
+                    matches = [u for u in detected_urls if q in u.upper()]
+                    
                     if matches:
-                        best_url = matches[-1]
-                        print(f"[Extractor] 영상 화질: {q}")
+                        best_url = matches[0]
+                        print(f"[Extractor] 최적 화질 매칭 성공: {q}")
                         break
+                        
                 if not best_url:
                     best_url = detected_urls[-1]
-            
-            if best_url:
-                best_url = best_url.strip().rstrip('.')
+                    print("[Extractor] 우선순위 매칭 실패, 기본 주소 사용")
 
             return best_url, final_title
 
