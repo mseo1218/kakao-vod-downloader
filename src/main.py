@@ -23,7 +23,9 @@ from downloader import download_video
 extract_queue = queue.Queue()  # 타이틀 -> 영상링크용
 download_queue = queue.Queue() # 영상링크 -> 실제파일용
 
+
 done_set = set()
+active_downloads = 0  # 현재 실제 다운로드 중인 작업 수
 lock = threading.Lock()
 
 def load_done():
@@ -99,22 +101,33 @@ def extractor_worker():
 
 # --- [Worker 3] 실제 다운로드 ---
 def downloader_worker():
+    global active_downloads # 카운터 참조
     while True:
         mp4_url, title, original_url = download_queue.get()
-        print(f"📥 [다운 시작] {title}.mp4")
         
-        if download_video(mp4_url, title, config.DOWNLOAD_DIR):
-            print(f"✅ [다운 완료] {title}")
+        # 다운로드 시작: 카운터 증가
+        with lock:
+            active_downloads += 1
+            
+        print(f"📥 [다운 시작] {title}.mp4 (현재 진행 중: {active_downloads}건)")
+        
+        try:
+            if download_video(mp4_url, title, config.DOWNLOAD_DIR):
+                print(f"✅ [다운 완료] {title}")
+                with lock:
+                    with open(config.DONE_FILE, "a", encoding="utf-8") as f:
+                        f.write(original_url + "\n")
+                    done_set.add(original_url)
+            else:
+                print(f"❌ [에러] 다운로드 실패: {title}")
+                with lock:
+                    with open(config.FAILED_FILE, "a", encoding="utf-8") as f:
+                        f.write(original_url + "\n")
+        finally:
+            # 다운로드 종료(성공/실패 무관): 카운터 감소 및 task_done
             with lock:
-                with open(config.DONE_FILE, "a", encoding="utf-8") as f:
-                    f.write(original_url + "\n")
-                done_set.add(original_url)
-        else:
-            print(f"❌ [에러] 다운로드 실패: {title}")
-            with lock:
-                with open(config.FAILED_FILE, "a", encoding="utf-8") as f:
-                    f.write(original_url + "\n")
-        download_queue.task_done()
+                active_downloads -= 1
+            download_queue.task_done()
 
 # --- 메인 실행 ---
 def main():
@@ -142,18 +155,19 @@ def main():
             e_size = extract_queue.qsize()
             d_size = download_queue.qsize()
             
-            # 모든 큐가 비어있는 경우
-            if e_size == 0 and d_size == 0:
+            # 모든 큐가 비어있고, 실제 진행 중인 다운로드도 없을 때
+            if e_size == 0 and d_size == 0 and active_downloads == 0:
                 if was_busy:
-                    print("\n✨ [알림] 현재 큐에 담긴 모든 작업을 완료했습니다!")
-                    print("☕ [대기 중] 새 링크가 추가되기를 기다리고 있습니다... (10초 주기 감시)")
+                    print("\n✨ [알림] 모든 작업(추출/다운로드)이 완전히 종료되었습니다!")
+                    print("☕ [대기 중] 새 링크를 기다리는 중... (10초 주기 감시)")
                     was_busy = False
             else:
-                # 작업이 진행 중인 경우 상태 표시 (너무 잦으면 주석처리)
-                # print(f"📊 [현황] 추출 대기: {e_size} | 다운로드 대기: {d_size}", end="\r")
-                was_busy = True
+                # 진행 상황을 한 줄에 표시 (선택 사항)
+                if e_size > 0 or d_size > 0 or active_downloads > 0:
+                    print(f"📊 [현황] 추출대기: {e_size} | 다운대기: {d_size} | 진행중: {active_downloads}   ", end="\r")
+                    was_busy = True
                 
-            time.sleep(5) # 5초마다 큐 상태 체크
+            time.sleep(5)
     except KeyboardInterrupt:
         print("\n종료합니다.")
 
