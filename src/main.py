@@ -99,35 +99,41 @@ def extractor_worker():
             print(f"❌ [에러] 주소 추출 실패: {title}")
         extract_queue.task_done()
 
-# --- [Worker 3] 실제 다운로드 ---
+# --- [Worker 3] 실제 다운로드 (재시도 로직 포함) ---
 def downloader_worker():
-    global active_downloads # 카운터 참조
+    global active_downloads
+    retry_count = {} # URL별 재시도 횟수 체크용
+
     while True:
         mp4_url, title, original_url = download_queue.get()
         
-        # 다운로드 시작: 카운터 증가
         with lock:
             active_downloads += 1
             
         print(f"📥 [다운 시작] {title}.mp4 (현재 진행 중: {active_downloads}건)")
         
-        try:
-            if download_video(mp4_url, title, config.DOWNLOAD_DIR):
-                print(f"✅ [다운 완료] {title}")
-                with lock:
-                    with open(config.DONE_FILE, "a", encoding="utf-8") as f:
-                        f.write(original_url + "\n")
-                    done_set.add(original_url)
+        if download_video(mp4_url, title, config.DOWNLOAD_DIR):
+            print(f"✅ [다운 완료] {title}")
+            with lock:
+                with open(config.DONE_FILE, "a", encoding="utf-8") as f:
+                    f.write(original_url + "\n")
+                done_set.add(original_url)
+        else:
+            # 실패 시 재시도 로직
+            current_retry = retry_count.get(original_url, 0)
+            if current_retry < 2: # 최대 2번 더 시도 (총 3번)
+                retry_count[original_url] = current_retry + 1
+                print(f"⚠️ [재시도] {title} (시도 {current_retry + 1}/2)...")
+                download_queue.put((mp4_url, title, original_url)) # 다시 큐에 넣기
             else:
-                print(f"❌ [에러] 다운로드 실패: {title}")
+                print(f"❌ [최종 실패] {title} -> failed.txt 기록")
                 with lock:
                     with open(config.FAILED_FILE, "a", encoding="utf-8") as f:
                         f.write(original_url + "\n")
-        finally:
-            # 다운로드 종료(성공/실패 무관): 카운터 감소 및 task_done
-            with lock:
-                active_downloads -= 1
-            download_queue.task_done()
+        
+        with lock:
+            active_downloads -= 1
+        download_queue.task_done()
 
 # --- 메인 실행 ---
 def main():
@@ -169,8 +175,17 @@ def main():
                 
             time.sleep(5)
     except KeyboardInterrupt:
-        print("\n종료합니다.")
-
+        print("\n⚠️ 종료 요청 감지! 모든 프로세스를 정리합니다...")
+        with lock:
+            for p in active_processes:
+                try:
+                    p.terminate() # FFmpeg 부드럽게 종료 시도
+                    print(f"[*] 하위 프로세스 종료 신호 전송 완료")
+                except:
+                    pass
+        print("Bye!")
+        os._exit(0)
+                
 if __name__ == "__main__":
     config.init_directories()
     main()
