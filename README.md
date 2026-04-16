@@ -32,24 +32,33 @@
    - `headless`: 브라우저 창 숨김 여부 (기본 True)
 
 🛑 성인인증 필요시
-  - 프로그램 종료 후 headless 모드를 False로 변경
-  - 프로그램 실행 후 필요한 영상 다운로드 진행시 브라우저 창이 열리면 로그인 완료
-  - 이후 프로그램 종료후 다시 headless 모드를 True로 변경하면, 로그인 세션 저장되어 headless 모드로 성인인증필요한 영상 다운로드 진행가능
+  - 프로그램 종료 후 **`setting.json`** 에서 **`headless=false`** 로 변경
+  - 프로그램 실행 후, 브라우저가 열리면 로그인 진행
+  - 로그인 완료 후, Enter 눌러 프로그램 종료
+  - 다시 **`setting.json`** 에서 **`headless=true`** 로 변경
+  - 프로그램 실행 후 다운로드 진행(로그인 세션 저장되어 성인인증 필요한 영상 다운로드 가능해짐)
 
 ---
+#### ⚙️ 주요 설정 (`settings.json`)
+
+| 설정 항목 | 설명 | 기본값 |
+| :--- | :--- | :--- |
+| `extractor_workers` | 동시에 가공할 영상 링크 개수를 설정합니다. | `1` |
+| `download_workers` | 동시에 다운로드할 파일 개수를 설정합니다. | `16` |
+| `headless` | 브라우저 창 표시 여부 (True: 숨김 / False: 표시) | `True` |
+
 
 #### 📂 배포판 구조 (dist)
 
 ```bash
 .
 ├── KakaoDownloader.exe    # 메인 실행 파일
-├── settings.json          # 사용자 설정 파일 (실행 시 자동 생성)
+├── settings.json          # 사용자 설정 파일 / 실행 시 자동 생성
 ├── bin/                   # 필수 바이너리 (Chromium, FFmpeg)
-│   ├── playwright/        # 브라우저 엔진
-│   └── ffmpeg.exe         # 영상 합성 엔진
-├── data/                  # 작업 기록 (links.txt 등)
-└── videos/                # 영상 저장 폴더
-└── src/                   # 로그인 세션 찌꺼기
+│   ├── playwright/        
+│   └── ffmpeg.exe         
+├── data/                  # 작업 기록 (links.txt, 로그인 세션 User_data 등) / 실행 시 자동 생성
+└── videos/                # 영상 저장 폴더 / 실행 시 자동 생성
 
 ```
 
@@ -110,6 +119,7 @@ playwright install chromium
 ├── data/               # 데이터 관리 폴더 (Git 제외)
 │   ├── links.txt       # 다운로드할 URL 목록
 │   ├── failed.txt      # 실패한 URL 기록
+│   ├── titles.txt      # URL과 제목 쌍 (확인용)
 │   └── done.txt        # 완료된 URL 기록
 ├── videos/             # 다운로드 완료된 영상 저장 폴더
 ├── .gitignore          # Git 추적 제외 설정 파일
