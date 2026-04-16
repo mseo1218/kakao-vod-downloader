@@ -19,19 +19,16 @@
 ### 1. 일반 사용자
 파이썬 설치 없이 바로 사용하려는 분들을 위한 방법입니다.
 
-1.  [Releases](https://github.com/mseo1218/kakao-vod-downloader/releases) 페이지에서 최신 버전의 `KakaoDownloader.zip`을 다운로드합니다.
-2. `KakaoDownloader.exe`를 실행합니다.
+1.  [*Releases*](https://github.com/mseo1218/kakao-vod-downloader/releases) 페이지에서 최신 버전의 **`KakaoDownloader.zip`**을 다운로드합니다.
+2. **`KakaoDownloader.exe`**를 실행합니다.
 3. 처음 실행하면 폴더에 **`settings.json`** 파일이 자동 생성됩니다.
 4. **`data/links.txt`** 메모장을 열고 다운받기를 원하는 링크를 한줄씩 붙여넣고 저장하세요.
 5. 실시간으로 메모장에 추가되는 링크의 영상 다운로드가 진행됩니다.
-6. 프로그램 종료는 Control + C 를 눌러주세요.
+6. 프로그램 종료는 **`Control + C`** 를 눌러주세요.
 
-🛑 **설정 변경**: PC환경에 따라 동시 다운로드 개수를 변경하고 싶으면 `settings.json`을 메모장으로 수정 후 프로그램을 재시작하세요.
-   - `extractor_workers`: 주소 추출기 개수 (기본 1, 변경 비추천)
-   - `download_workers`: 동시 다운로드 개수 (기본 16, 문제발생시 줄이기)
-   - `headless`: 브라우저 창 숨김 여부 (기본 True)
+---
 
-🛑 성인인증 필요시
+☠️ **성인인증 필요시**
   - 프로그램 종료 후 **`setting.json`** 에서 **`headless=false`** 로 변경
   - 프로그램 실행 후, 브라우저가 열리면 로그인 진행
   - 로그인 완료 후, Enter 눌러 프로그램 종료
@@ -43,7 +40,7 @@
 
 | 설정 항목 | 설명 | 기본값 |
 | :--- | :--- | :--- |
-| `extractor_workers` | 동시에 가공할 영상 링크 개수를 설정합니다. | `1` |
+| `extractor_workers` | 동시에 가공할 영상 링크 개수를 설정합니다.(변경 비추천) | `1` |
 | `download_workers` | 동시에 다운로드할 파일 개수를 설정합니다. | `16` |
 | `headless` | 브라우저 창 표시 여부 (True: 숨김 / False: 표시) | `True` |
 
