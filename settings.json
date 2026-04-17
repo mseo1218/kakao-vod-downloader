@@ -1,6 +1,6 @@
 {
     "extractor_workers": 1,
-    "download_workers": 16,
+    "download_workers": 4,
     "headless": true,
     "_comment": "설정 변경 후 프로그램을 재시작하세요."
 }

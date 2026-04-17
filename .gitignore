@@ -1,8 +1,8 @@
 __pycache__/
 .venv/
 venv/
-src/user_data/
-data/*.txt
+videos/
+data/
 *.mp4
 *.part
 .DS_Store
