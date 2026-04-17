@@ -3,6 +3,8 @@ import queue
 import time
 import os
 import sys
+import shutil
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.join(BASE_DIR, "src")
@@ -89,7 +91,7 @@ def extractor_worker():
             except:
                 pass
         else:
-            print(f"❌ [추출 실패] {title[:40]}")
+            log(f"❌ [추출 실패] {title[:40]}")
 
         extract_queue.task_done()
 
@@ -106,13 +108,12 @@ def downloader_worker():
         with lock:
             active_downloads += 1
 
-        # ✅ 상태줄 안 깨지게 개행 추가
-        print(f"\n📥 [다운 시작] {title[:40]}")
+        log(f"📥 [다운 시작] {title[:40]}")
 
         success = download_video(mp4_url, title, config.DOWNLOAD_DIR)
 
         if success:
-            print(f"\n✅ [완료] {title[:40]}")
+            log(f"✅ [완료] {title[:40]}")
             with lock:
                 with open(config.DONE_FILE, "a", encoding="utf-8") as f:
                     f.write(original_url + "\n")
@@ -120,14 +121,14 @@ def downloader_worker():
                 completed_count += 1
         else:
             if retry_count < 3:
-                print(f"\n🔄 [재시도 {retry_count+1}/3] {title[:30]}")
+                log(f"🔄 [재시도 {retry_count+1}/3] {title[:30]}")
                 time.sleep(3)
                 try:
                     download_queue.put((mp4_url, title, original_url, retry_count + 1), timeout=5)
                 except:
                     pass
             else:
-                print(f"\n❌ [최종 실패] {title[:30]}")
+                log(f"❌ [최종 실패] {title[:30]}")
                 with lock:
                     with open(config.FAILED_FILE, "a", encoding="utf-8") as f:
                         f.write(original_url + "\n")
@@ -137,6 +138,18 @@ def downloader_worker():
 
         download_queue.task_done()
 
+def log(msg):
+    # 터미널 너비 가져오기 (fallback 120)
+    try:
+        width = shutil.get_terminal_size().columns
+    except:
+        width = 120
+
+    # 상태줄 지우기
+    print("\r" + " " * width, end="")
+
+    # 로그 출력
+    print(f"\r{msg}")
 
 def main():
     global extract_queue, download_queue
