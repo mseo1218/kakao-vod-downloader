@@ -22,6 +22,7 @@ done_set = set()
 active_downloads = 0
 pending_links_count = 0
 completed_count = 0
+failed_count = 0
 lock = threading.Lock()
 
 
@@ -97,7 +98,7 @@ def extractor_worker():
 
 
 def downloader_worker():
-    global active_downloads, completed_count
+    global active_downloads, completed_count, failed_count
 
     while True:
         try:
@@ -130,6 +131,7 @@ def downloader_worker():
             else:
                 log(f"❌ [최종 실패] {title[:30]}")
                 with lock:
+                    failed_count += 1
                     with open(config.FAILED_FILE, "a", encoding="utf-8") as f:
                         f.write(original_url + "\n")
 
@@ -199,8 +201,14 @@ def main():
     try:
         while True:
             with lock:
-                status = f"📊 대기:{pending_links_count} | 추출:{extract_queue.qsize()} | 다운대기:{download_queue.qsize()} | 다운중:{active_downloads} | 완료:{completed_count}"
-
+                status = (
+                    f"📊 대기:{pending_links_count} | "
+                    f"추출:{extract_queue.qsize()} | "
+                    f"다운대기:{download_queue.qsize()} | "
+                    f"다운중:{active_downloads} | "
+                    f"완료:{completed_count} | "
+                    f"실패:{failed_count}"
+                )
             # ✅ 길이 보정 (잔여 문자 제거)
             pad = " " * max(0, last_len - len(status))
 
