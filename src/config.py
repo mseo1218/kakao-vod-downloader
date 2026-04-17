@@ -26,6 +26,10 @@ FFMPEG_EXE = os.path.join(BIN_PATH, "ffmpeg.exe")
 if not os.path.exists(FFMPEG_EXE):
     FFMPEG_EXE = "ffmpeg"  # 시스템 환경변수 이용
 
+ARIA2_EXE = os.path.join(BIN_PATH, "aria2c.exe")
+if not os.path.exists(ARIA2_EXE):
+    ARIA2_EXE = "aria2c"
+    
 # Playwright/Chrome 설정
 internal_chrome = os.path.join(
     BIN_PATH, "playwright", "chromium-1208", "chrome-win64", "chrome.exe"
@@ -44,7 +48,7 @@ else:
 
 # --- 4. 워커 및 브라우저 설정 ---
 EXTRACTOR_WORKER_COUNT = 1 
-DOWNLOAD_WORKER_COUNT = 4
+DOWNLOAD_WORKER_COUNT = 10
 HEADLESS_MODE = True
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 

@@ -53,8 +53,9 @@
 .
 ├── KakaoDownloader.exe    # 메인 실행 파일
 ├── settings.json          # 사용자 설정 파일 / 실행 시 자동 생성
-├── bin/                   # 필수 바이너리 (Chromium, FFmpeg)
-│   ├── playwright/        
+├── bin/                   # 필수 바이너리 (Chromium, FFmpeg, aria2)
+│   ├── playwright/
+│   ├── aria2c.exe           
 │   └── ffmpeg.exe         
 ├── data/                  # 작업 기록 (links.txt, 로그인 세션 User_data 등) / 실행 시 자동 생성
 └── videos/                # 영상 저장 폴더 / 실행 시 자동 생성
@@ -67,9 +68,9 @@
 
 #### 1. 필수 준비물
 
-이 프로그램은 영상 합성을 위해 FFmpeg가 필요합니다.
+이 프로그램은 영상 합성을 위해 FFmpeg 또는 aria2c 가 필요합니다.
 
-- FFmpeg: 공식 사이트에서 설치 후 환경 변수(Path)에 등록합니다  
+- FFmpeg, aria2: 공식 사이트에서 설치 후 환경 변수(Path)에 등록합니다  
 - 참고: https://zerobit.tistory.com/42
 
 ---
