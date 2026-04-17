@@ -35,9 +35,9 @@ class VideoExtractor:
 
         if config.CHROME_EXE_PATH:
             launch_options["executable_path"] = config.CHROME_EXE_PATH
-            print(f"[*] 전용 브라우저 사용: {config.CHROME_EXE_PATH}")
+            # print(f"[*] 전용 브라우저 사용: {config.CHROME_EXE_PATH}")
         else:
-            print("[*] 시스템 브라우저 사용 (bin 폴더 미발견)")
+            print("[*] bin 폴더 미발견")
 
         try:
             self.context = self.pw.chromium.launch_persistent_context(**launch_options)
@@ -77,7 +77,7 @@ class VideoExtractor:
                     if target_u not in detected_urls:
                         # 최우선 순위이므로 리스트 맨 앞에 삽입
                         detected_urls.insert(0, target_u)
-                        print(f"[⭐ 1순위 감지] clip.mp4 패킷: {target_u[:60]}...")
+                        # print(f"[⭐ 1순위 감지] clip.mp4 패킷: {target_u[:60]}...")
                     return
 
                 # 2. [2순위] 일반 mp4 패킷 감지 (사용자 예시 패턴)
@@ -87,7 +87,7 @@ class VideoExtractor:
                         if u not in detected_urls:
                             # 차선책이므로 리스트 뒤에 추가
                             detected_urls.append(u)
-                            print(f"[✅ 2순위 감지] 일반 mp4 패킷: {u[:60]}...")
+                            # print(f"[✅ 2순위 감지] 일반 mp4 패킷: {u[:60]}...")
 
             page.on("request", handle_request)
             
@@ -104,7 +104,7 @@ class VideoExtractor:
 
             # 3. Iframe 내부 화질 변경 로직
             try:
-                print("[Extractor] 플레이어 프레임 탐색 중...")
+                # print("[Extractor] 플레이어 프레임 탐색 중...")
                 player_frame = page.frame(name="player_iframe") or page.frame(url=re.compile(r"tv.kakao.com/embed"))
                 
                 if player_frame:
@@ -130,21 +130,21 @@ class VideoExtractor:
                     
                     if target_1080.count() > 0:
                         target_1080.click(force=True)
-                        print("[Extractor] 1080p(HIGH4)로 화질 변경 클릭")
+                        # print("[Extractor] 1080p(HIGH4)로 화질 변경 클릭")
                     elif target_720.count() > 0:
                         target_720.click(force=True)
-                        print("[Extractor] 1080p 없음 -> 720p(HIGH)로 화질 변경 클릭")
+                        #print("[Extractor] 1080p 없음 -> 720p(HIGH)로 화질 변경 클릭")
                     else:
                         print("[Extractor] 고화질 옵션 버튼을 찾지 못함")
                         setting_btn.click(force=True) 
 
                     # 화질 변경 후 새 패킷이 발생할 때까지 대기
-                    time.sleep(5.0) 
+                    time.sleep(4) 
             except Exception as fe:
                 print(f"[!] 화질 변경 과정 오류: {fe}")
 
             # 4. 패킷 수집 대기 루프
-            print("[Extractor] 최종 패킷 대기 중...")
+            # print("[Extractor] 최종 패킷 대기 중...")
             for i in range(30):
                 # 리스트에 하나라도 잡혔으면 성공
                 if detected_urls:
