@@ -48,7 +48,7 @@ else:
 
 # --- 4. 워커 및 브라우저 설정 ---
 EXTRACTOR_WORKER_COUNT = 1 
-DOWNLOAD_WORKER_COUNT = 10
+DOWNLOAD_WORKER_COUNT = 4
 HEADLESS_MODE = True
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 
