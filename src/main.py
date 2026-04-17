@@ -160,6 +160,30 @@ def main():
     extract_queue = queue.Queue(maxsize=limit_val)
     download_queue = queue.Queue(maxsize=limit_val)
 
+    if not config.HEADLESS_MODE:
+            print("\n🔑 [로그인 세션 관리 모드]")
+            print("1. 브라우저가 열리면 로그인을 진행하세요.")
+            print("2. 로그인 완료 후, 이 창에서 Enter를 누르면 세션이 저장되고 종료됩니다.")
+            
+            try:
+                # VideoExtractor 인스턴스 생성 (내부에서 브라우저/컨텍스트 시작)
+                extractor = VideoExtractor() 
+                page = extractor.context.new_page()
+                
+                # 카카오 로그인 페이지로 이동
+                login_url = "https://accounts.kakao.com/login/?continue=https%3A%2F%2Ftv.kakao.com%2F"
+                page.goto(login_url)
+                
+                # 사용자가 Enter를 누를 때까지 프로세스를 점유하여 브라우저 유지
+                input("\n[WAIT] 로그인을 마치셨나요? Enter를 누르면 프로그램이 종료됩니다...")
+                
+            except Exception as e:
+                print(f"❌ 브라우저 실행 중 오류 발생: {e}")
+            finally:
+                if 'extractor' in locals():
+                    extractor.pw.stop()
+            return
+
     print("=" * 50)
     print(f"🚀 실행 (extract=1 / download={config.DOWNLOAD_WORKER_COUNT})")
     print("=" * 50)
