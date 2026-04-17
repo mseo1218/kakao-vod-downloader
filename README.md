@@ -41,9 +41,10 @@
 | 설정 항목 | 설명 | 기본값 |
 | :--- | :--- | :--- |
 | `extractor_workers` | 동시에 가공할 영상 링크 개수를 설정합니다.(변경 비추천) | `1` |
-| `download_workers` | 동시에 다운로드할 파일 개수를 설정합니다. | `16` |
+| `download_workers` | 동시에 다운로드할 파일 개수를 설정합니다. | `4` |
 | `headless` | 브라우저 창 표시 여부 (True: 숨김 / False: 표시) | `True` |
 
+다운로드 워커 늘려도 어차피 대역폭 제한되며, 용량 클수록 오래걸리는 경향이 있어요
 
 #### 📂 배포판 구조 (dist)
 
@@ -129,7 +130,7 @@ playwright install chromium
 | 설정 항목 | 설명 | 기본값 |
 | :--- | :--- | :--- |
 | `DOWNLOAD_DIR` | 영상이 저장될 경로를 지정합니다. | `./videos/` |
-| `DOWNLOAD_WORKER_COUNT` | 동시에 다운로드할 파일 개수를 설정합니다. | `8` |
+| `DOWNLOAD_WORKER_COUNT` | 동시에 다운로드할 파일 개수를 설정합니다. | `4` |
 | `HEADLESS_MODE` | 브라우저 창 표시 여부 (True: 숨김 / False: 표시) | `True` |
 
 🛑 성인인증 필요시 잠깐 HEADLESS모드 꺼서 로그인만 했다가 스크립트 재실행하면 가능
