@@ -38,7 +38,8 @@ def title_worker():
     processed_in_session = set()
 
     while True:
-        done_set = load_done()
+        with lock:
+            done_set = load_done()
 
         if os.path.exists(config.LINK_FILE):
             try:
@@ -56,22 +57,27 @@ def title_worker():
                     if not title:
                         continue
 
-                    try:
-                        extract_queue.put((url, title), timeout=5)
-                        processed_in_session.add(url)
-                    except:
-                        pass
+                    with lock:
+                        with open(config.TITLE_FILE, "a", encoding="utf-8") as f:
+                            f.write(f"{title}|{url}\n")
 
+                    # ✅ blocking put (큐 자리 날 때까지 기다림)
+                    extract_queue.put((url, title))
+
+                    processed_in_session.add(url)
+
+                    # ✅ 성공했을 때만 감소
                     with lock:
                         pending_links_count = max(0, pending_links_count - 1)
 
-            except:
+            except Exception:
                 pass
 
         time.sleep(10)
 
 
 def extractor_worker():
+    global failed_count
     extractor = VideoExtractor()
 
     while True:
@@ -80,7 +86,7 @@ def extractor_worker():
         except:
             continue
 
-        if url in load_done():
+        if url in done_set:
             extract_queue.task_done()
             continue
 
@@ -88,12 +94,15 @@ def extractor_worker():
 
         if mp4_url:
             try:
-                download_queue.put((mp4_url, final_title, url, 0), timeout=5)
+                download_queue.put((mp4_url, final_title, url, 0))
             except:
                 pass
         else:
             log(f"❌ [추출 실패] {title[:40]}")
-
+            with lock:
+                failed_count += 1
+                with open(config.FAILED_FILE, "a", encoding="utf-8") as f:
+                    f.write(url + "\n")
         extract_queue.task_done()
 
 
@@ -125,7 +134,7 @@ def downloader_worker():
                 log(f"🔄 [재시도 {retry_count+1}/3] {title[:30]}")
                 time.sleep(3)
                 try:
-                    download_queue.put((mp4_url, title, original_url, retry_count + 1), timeout=5)
+                    download_queue.put((mp4_url, title, original_url, retry_count + 1))
                 except:
                     pass
             else:

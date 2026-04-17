@@ -123,7 +123,8 @@ class VideoExtractor:
                     time.sleep(4)
             except Exception as fe:
                 print(f"\n[!] 화질 변경 오류: {fe}")
-
+                return None, None
+                
             # 🔥 패킷 대기
             for _ in range(30):
                 if detected_urls:
