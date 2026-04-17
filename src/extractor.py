@@ -39,9 +39,9 @@ class VideoExtractor:
 
         try:
             self.context = self.pw.chromium.launch_persistent_context(**launch_options)
-            print(f"[Extractor] 준비 완료 (Headless: {config.HEADLESS_MODE})")
+            # print(f"\n준비 완료 (Headless: {config.HEADLESS_MODE})")
         except Exception as e:
-            print(f"[!] 브라우저 실행 실패: {e}")
+            print(f"\n[!] 브라우저 실행 실패: {e}")
 
     def extract_mp4(self, url, initial_title):
         page = None
@@ -122,7 +122,7 @@ class VideoExtractor:
 
                     time.sleep(4)
             except Exception as fe:
-                print(f"[!] 화질 변경 오류: {fe}")
+                print(f"\n[!] 화질 변경 오류: {fe}")
 
             # 🔥 패킷 대기
             for _ in range(30):
@@ -145,7 +145,7 @@ class VideoExtractor:
             return best_url, final_title
 
         except Exception as e:
-            print(f"[Extractor] 에러 발생: {e}")
+            print(f"\n[Extractor] 에러 발생: {e}")
             return None, initial_title
 
         finally:
@@ -158,5 +158,5 @@ class VideoExtractor:
             # ✅ 🔥 핵심 개선: 주기적 브라우저 리셋
             self.job_count += 1
             if self.job_count % 20 == 0:
-                print("[Extractor] 브라우저 리셋")
+                print(f"\n[Extractor] 브라우저 리셋")
                 self._initialize_browser()

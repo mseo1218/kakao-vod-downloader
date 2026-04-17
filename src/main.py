@@ -106,12 +106,13 @@ def downloader_worker():
         with lock:
             active_downloads += 1
 
-        print(f"📥 [다운 시작] {title[:40]}")
+        # ✅ 상태줄 안 깨지게 개행 추가
+        print(f"\n📥 [다운 시작] {title[:40]}")
 
         success = download_video(mp4_url, title, config.DOWNLOAD_DIR)
 
         if success:
-            print(f"✅ [완료] {title[:40]}")
+            print(f"\n✅ [완료] {title[:40]}")
             with lock:
                 with open(config.DONE_FILE, "a", encoding="utf-8") as f:
                     f.write(original_url + "\n")
@@ -119,14 +120,14 @@ def downloader_worker():
                 completed_count += 1
         else:
             if retry_count < 3:
-                print(f"🔄 [재시도 {retry_count+1}/3] {title[:30]}")
+                print(f"\n🔄 [재시도 {retry_count+1}/3] {title[:30]}")
                 time.sleep(3)
                 try:
                     download_queue.put((mp4_url, title, original_url, retry_count + 1), timeout=5)
                 except:
                     pass
             else:
-                print(f"❌ [최종 실패] {title[:30]}")
+                print(f"\n❌ [최종 실패] {title[:30]}")
                 with lock:
                     with open(config.FAILED_FILE, "a", encoding="utf-8") as f:
                         f.write(original_url + "\n")
@@ -156,23 +157,26 @@ def main():
     for _ in range(config.DOWNLOAD_WORKER_COUNT):
         threading.Thread(target=downloader_worker, daemon=True).start()
 
-    last_status = ""
+    last_len = 0  # ✅ 추가
 
     try:
         while True:
             with lock:
                 status = f"📊 대기:{pending_links_count} | 추출:{extract_queue.qsize()} | 다운대기:{download_queue.qsize()} | 다운중:{active_downloads} | 완료:{completed_count}"
 
-            if status != last_status:
-                print(status)
-                last_status = status
+            # ✅ 길이 보정 (잔여 문자 제거)
+            pad = " " * max(0, last_len - len(status))
+
+            # ✅ 한 줄 갱신 출력
+            print(f"\r{status}{pad}", end="", flush=True)
+
+            last_len = len(status)
 
             time.sleep(1)
 
     except KeyboardInterrupt:
-        print("종료")
+        print("\n종료")
         os._exit(0)
-
 
 if __name__ == "__main__":
     main()
